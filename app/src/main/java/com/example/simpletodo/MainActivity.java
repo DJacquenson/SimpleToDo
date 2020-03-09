@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.FileUtils;
 import android.util.Log;
@@ -53,7 +54,17 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        itemsAdapter= new ItemsAdapter(items, onLongClickListener);
+        ItemsAdapter.OnClickListener onClickListener = new ItemsAdapter.OnClickListener() {
+            @Override
+            public void onItemClicked(int position) {
+                Log.d("MainActivity", "Single click at the position" + position);
+                // Create the new activity
+                Intent i =new Intent(MainActivity.this, EditActivity.class);
+                // Pass the data being edited
+                // Display the activity
+            }
+        };
+        itemsAdapter= new ItemsAdapter(items, onLongClickListener, onClickListener);
         rvItems.setAdapter(itemsAdapter);
         rvItems.setLayoutManager(new LinearLayoutManager(this));
 
@@ -72,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
     private File getDataFile(){
+
         return new File(getFilesDir(), "data.txt");
     }
 

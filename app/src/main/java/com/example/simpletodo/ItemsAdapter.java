@@ -13,21 +13,25 @@ import java.util.List;
 
 public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> {
 
+    public interface OnClickListener{
+        void onItemClicked(int position);
+    }
 
-
-    //@NonNull
     public interface OnLongClickListener{
         void onItemLongClicked(int position);
     }
     List<String> items;
     OnLongClickListener longClickListener;
-    public ItemsAdapter(List<String> items ,OnLongClickListener longClickListener){
+    OnClickListener clickListener;
+
+    public ItemsAdapter(List<String> items, OnLongClickListener  longClickListener, OnClickListener clickListener){
         this.items = items;
         this.longClickListener=longClickListener;
+        this.clickListener = clickListener;
     }
 
 
-
+    @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         //Usse layout inflater to inflate to view
@@ -64,14 +68,22 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
         public void bind(String item) {
             tvItem.setText(item);
             tvItem.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    // Remove the item from the recycler View
-                    longClickListener.onItemLongClicked(getAdapterPosition());
-                    //OnLongClickListener.onItemLongClicked(getAdapterPosition());
-                    return false;
-                }
-            });
+                                              @Override
+                                              public boolean onLongClick(View v) {
+                                                  clickListener.onItemClicked(getAdapterPosition());
+                                                  return false;
+                                              }
+                                          });
+
+            tvItem.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View v) {
+                            // Remove the item from the recycler View
+                            longClickListener.onItemLongClicked(getAdapterPosition());
+                            //OnLongClickListener.onItemLongClicked(getAdapterPosition());
+                            return true;
+                        }
+                    });
         }
     }
 }
